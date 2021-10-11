@@ -1,0 +1,10 @@
+scikit-learn
+imbalanced-learn
+pandas
+numpy
+seaborn
+matplotlib
+gensim
+tensorflow-gpu
+keras
+optuna
