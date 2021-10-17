@@ -16,14 +16,14 @@ class SequenceConv(DeepModel):
     def model(self, params):
         model = Sequential()
 
-        model.add(Convolution2D(params['conv_size'], 3, 3, border_mode='same', input_shape=(224, 224, 3), activation=params['activation']))
+        model.add(Convolution2D(params['conv_size'], border_mode='same', input_shape=(224, 224, 3), activation=params['activation']))
         # model.add(Convolution2D(params['conv_size'], 3, 3, border_mode='same', activation=params['activation']))
         model.add(GlobalMaxPooling2D())
 
         base = params['conv_size']
         for i in range(len(params['depth'])-1):
             base *= 2
-            model.add(Convolution2D(base, 3, 3, border_mode='same', activation=params['activation']))
+            model.add(Convolution2D(base, border_mode='same', activation=params['activation']))
             # model.add(Convolution2D(base, 3, 3, border_mode='same', activation=params['activation']))
             model.add(GlobalMaxPooling2D())
 
@@ -45,12 +45,12 @@ class SequenceConv(DeepModel):
     def objective(self, trial):
         params = {
             "loss": 'categorical_crossentropy',
-            'activation': trial.suggest_categorical('activation', ['relu', 'tanh', 'sigmoid']),
+            'activation': trial.suggest_categorical('activation', ['relu', 'tanh']),
             "depth": trial.suggest_categorical('filter_size', [1, 2, 3]),
             # "optimizer": trial.suggest_categorical('optimizer', [Adam, SGD, RMSprop]),
             "dropout": trial.suggest_categorical("dropout", [0.1, 0.3, 0.5]),
-            "hidden_layer": trial.suggest_categorical("hidden_layer", [64, 128, 256]),
-            "conv_layer": trial.suggest_categorical("conv_layer", [16, 32]),
+            "hidden_size": trial.suggest_categorical("hidden_size", [64, 128, 256]),
+            "conv_size": trial.suggest_categorical("conv_size", [16, 32]),
             "lr": trial.suggest_loguniform("lr", 1e-5, 1e-1),
         }
         model = self.model(params)

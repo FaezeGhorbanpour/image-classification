@@ -19,7 +19,7 @@ class ParallelConv(DeepModel):
 
         convs = []
         for filter_size in params['filter_size']:
-            x = Convolution2D(params['conv_layer'], filter_size, padding='same', activation=params['activation'],
+            x = Convolution2D(params['conv_size'], filter_size, padding='same', activation=params['activation'],
                               name='conv' + str(filter_size))(graph_in)
             convs.append(x)
 
@@ -29,7 +29,7 @@ class ParallelConv(DeepModel):
 
         model = Sequential([
             graph,
-            Dense(params['hidden_layer'], activation=params['activation'], name='dense1'),
+            Dense(params['hidden_size'], activation=params['activation'], name='dense1'),
             Dropout(params['dropout'], name='dropout'),
             BatchNormalization(name='normalization'),
             Dense(self.dataset.get_class_count(), activation='softmax', name='dense2')])
@@ -41,12 +41,12 @@ class ParallelConv(DeepModel):
     def objective(self, trial):
         params = {
             "loss": 'categorical_crossentropy',
-            'activation': trial.suggest_categorical('activation', ['relu', 'tanh', 'sigmoid']),
+            'activation': trial.suggest_categorical('activation', ['relu', 'tanh',]),
             "filter_size": trial.suggest_categorical('filter_size', [[16, 32, 64], [4, 16, 32], ]),
             # "optimizer": trial.suggest_categorical('optimizer', [Adam, SGD, RMSprop]),
             "dropout": trial.suggest_categorical("dropout", [0.1, 0.3, 0.5]),
-            "hidden_layer": trial.suggest_categorical("hidden_layer", [16, 64, 256]),
-            "conv_layer": trial.suggest_categorical("conv_layer", [16, 64, 256]),
+            "hidden_size": trial.suggest_categorical("hidden_size", [16, 64, 256]),
+            "conv_size": trial.suggest_categorical("conv_size", [16, 64, 256]),
             "lr": trial.suggest_loguniform("lr", 1e-5, 1e-1),
         }
         model = self.model(params)
