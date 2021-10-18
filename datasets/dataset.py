@@ -32,17 +32,16 @@ class Dataset:
 
     def get_validation(self):
         return self.validation_x, self.validation_y
-    
-    
+
     def labels_to_id(self):
-        self.train_y = np.array([self.labels_name.index(i) for i in self.train_y])
-        self.test_y = np.array([self.labels_name.index(i) for i in self.test_y])
-        self.validation_y = np.array([self.labels_name.index(i) for i in self.validation_y])
-        return self.train_y, self.test_y, self.validation_y
+        train_y = np.array([self.labels_name.index(i) for i in self.train_y])
+        test_y = np.array([self.labels_name.index(i) for i in self.test_y])
+        validation_y = np.array([self.labels_name.index(i) for i in self.validation_y])
+        return train_y, test_y, validation_y
 
     def categorical_labels(self):
-        self.labels_to_id()
-        self.train_y = np_utils.to_categorical(self.train_y)
-        self.test_y = np_utils.to_categorical(self.test_y)
-        self.validation_y = np_utils.to_categorical(self.validation_y)
-        return self.train_y, self.test_y, self.validation_y
+        train_y, test_y, validation_y = self.labels_to_id()
+        train_y = np_utils.to_categorical(train_y)
+        test_y = np_utils.to_categorical(test_y)
+        validation_y = np_utils.to_categorical(validation_y)
+        return train_y, test_y, validation_y

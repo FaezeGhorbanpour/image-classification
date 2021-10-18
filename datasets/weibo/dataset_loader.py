@@ -8,7 +8,7 @@ from keras.preprocessing import image
 class WeiboLoader(Dataset):
     def __init__(self):
         super().__init__()
-        self.data_name = 'twitter'
+        self.data_name = 'weibo'
 
         # self.data_path = '../../../../../media/external_3TB/3TB/ghorbanpoor/weibo'
         self.data_path = '/home/faeze/PycharmProjects/fake_news_detection/data/weibo'

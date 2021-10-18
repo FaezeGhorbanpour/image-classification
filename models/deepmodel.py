@@ -20,11 +20,12 @@ class DeepModel:
     def __init__(self, dataset, epochs=50, batch_size=128):
         self.model_name = ''
         self.dataset = dataset
-        self.dataset.categorical_labels()
 
         self.train_x, self.train_y = dataset.get_train()
         self.test_x, self.test_y = dataset.get_test()
         self.validation_x, self.validation_y = dataset.get_validation()
+
+        self.train_y, self.test_y, self.validation_y = self.dataset.categorical_labels()
 
         self.epochs = epochs
         self.batch_size = batch_size
