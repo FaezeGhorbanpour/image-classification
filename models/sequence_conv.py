@@ -36,7 +36,7 @@ class SequenceConv(DeepModel):
 
         model.add(Dense(self.dataset.get_class_count(), activation='softmax'))
 
-        model.compile(loss=params['loss'],
+        model.compile(loss='categorical_crossentropy',
                       optimizer=Adam(lr=params['lr']),
                       metrics=['accuracy'])
 
@@ -45,7 +45,6 @@ class SequenceConv(DeepModel):
     def objective(self, trial):
         print(trial.params)
         params = {
-            "loss": 'categorical_crossentropy',
             'activation': trial.suggest_categorical('activation', ['relu', 'tanh']),
             "depth": trial.suggest_categorical('filter_size', [1, 2, 3]),
             # "optimizer": trial.suggest_categorical('optimizer', [Adam, SGD, RMSprop]),
@@ -55,11 +54,7 @@ class SequenceConv(DeepModel):
             "lr": trial.suggest_loguniform("lr", 1e-5, 1e-1),
         }
         model = self.model(params)
-        model.fit(self.train_x, self.train_y, validation_data=(self.validation_x, self.validation_y),
-                  epochs=self.epochs, batch_size=self.batch_size, shuffle=True, verbose=1,
-                  callbacks=self.callbacks_list)
-        probs = model.predict(self.validation_x)
-        preds = np.argmax(probs, axis=1)
+        preds, probs = self.train(model)
         reals = np.argmax(self.validation_y, axis=1)
         accuracy = metrics.accuracy_score(reals, preds)
         return accuracy
@@ -67,9 +62,5 @@ class SequenceConv(DeepModel):
     def train_test(self):
         params = self.load_params()
         model = self.model(params)
-        model.fit(self.train_x, self.train_y, validation_data=(self.test_x, self.test_y),
-                  epochs=self.epochs, batch_size=self.batch_size, verbose=0,
-                  callbacks=self.callbacks_list)
-        probs = model.predict(self.test_x)
-        preds = np.argmax(probs, axis=1)
+        preds, probs = self.train(model)
         return preds, probs
