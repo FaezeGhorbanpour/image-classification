@@ -1,4 +1,4 @@
-from tensorflow.keras import Sequential, Input, Model
+from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Dense, Convolution2D, Flatten, GlobalMaxPooling2D, Dropout, BatchNormalization
 from tensorflow.keras.optimizers import Adam
 
@@ -16,15 +16,15 @@ class SequenceConv(DeepModel):
     def model(self, params):
         model = Sequential()
 
-        model.add(Convolution2D(params['conv_size'], border_mode='same', input_shape=(224, 224, 3), activation=params['activation']))
-        # model.add(Convolution2D(params['conv_size'], 3, 3, border_mode='same', activation=params['activation']))
+        model.add(Convolution2D(params['conv_size'], 3, 3, padding='same', input_shape=(224, 224, 3), activation=params['activation']))
+        model.add(Convolution2D(params['conv_size'], 3, 3, padding='same', activation=params['activation']))
         model.add(GlobalMaxPooling2D())
 
         base = params['conv_size']
-        for i in range(len(params['depth'])-1):
+        for i in range(params['depth']-1):
             base *= 2
-            model.add(Convolution2D(base, border_mode='same', activation=params['activation']))
-            # model.add(Convolution2D(base, 3, 3, border_mode='same', activation=params['activation']))
+            model.add(Convolution2D(base, 3, 3, padding='same', activation=params['activation']))
+            model.add(Convolution2D(base, 3, 3, padding='same', activation=params['activation']))
             model.add(GlobalMaxPooling2D())
 
         model.add(Flatten())
@@ -43,6 +43,7 @@ class SequenceConv(DeepModel):
         return model
 
     def objective(self, trial):
+        print(trial.params)
         params = {
             "loss": 'categorical_crossentropy',
             'activation': trial.suggest_categorical('activation', ['relu', 'tanh']),

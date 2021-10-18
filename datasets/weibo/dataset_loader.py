@@ -10,8 +10,8 @@ class WeiboLoader(Dataset):
         super().__init__()
         self.data_name = 'twitter'
 
-        # self.data_path = '../../../../../media/external_3TB/3TB/ghorbanpoor/weibo'
-        self.data_path = '/home/faeze/PycharmProjects/fake_news_detection/data/weibo'
+        self.data_path = '../../../../../media/external_3TB/3TB/ghorbanpoor/weibo'
+        # self.data_path = '/home/faeze/PycharmProjects/fake_news_detection/data/weibo'
         self.output_path = 'datasets/weibo/'
         self.labels_name = ['real', 'fake']
 

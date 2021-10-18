@@ -39,6 +39,7 @@ class ParallelConv(DeepModel):
         return model
 
     def objective(self, trial):
+        print(trial.params)
         params = {
             "loss": 'categorical_crossentropy',
             'activation': trial.suggest_categorical('activation', ['relu', 'tanh',]),

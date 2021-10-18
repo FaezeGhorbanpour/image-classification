@@ -10,8 +10,8 @@ class TwitterLoader(Dataset):
         super().__init__()
         self.data_name = 'twitter'
 
-        # self.data_path = '../../../../../media/external_3TB/3TB/ghorbanpoor/twitter'
-        self.data_path = '/home/faeze/PycharmProjects/fake_news_detection/data/twitter'
+        self.data_path = '../../../../../media/external_3TB/3TB/ghorbanpoor/twitter'
+        # self.data_path = '/home/faeze/PycharmProjects/fake_news_detection/data/twitter'
         self.output_path = 'datasets/twitter/'
         self.labels_name = ['real', 'fake']
 
